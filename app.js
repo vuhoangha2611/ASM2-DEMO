@@ -71,13 +71,15 @@ app.get('/insert', (req, res) => {
     res.render('newProduct')
 })
 
-app.post('/doInsert', async (req, res) => { 
+app.post('/doInsert', async (req, res) => {
     var nameInput = req.body.txtName;
+    if (nameInput.length < 6) {  
+        return res.status(500).send({ message: "ban nhap loi" })
+    }
     var priceInput = req.body.txtPrice;
     var newProduct = { name: nameInput, price: priceInput };
-
-    let client = await MongoClient.connect(url); 
-    let dbo = client.db("Test123"); 
+    let client = await MongoClient.connect(url);
+    let dbo = client.db("Test123");
     await dbo.collection("product").insertOne(newProduct);
     res.redirect('/')
 })
