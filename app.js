@@ -73,7 +73,7 @@ app.get('/insert', (req, res) => {
 
 app.post('/doInsert', async (req, res) => {
     var nameInput = req.body.txtName;
-    if(nameInput.length <= 6 || nameInput.includes('ID')){
+    if(nameInput.length <= 6 || !nameInput.includes('ID')){
         res.render('newProduct', {error:'Bạn cần nhập có "ID" trong tên sản phẩm'})
     }
     var priceInput = req.body.txtPrice;
