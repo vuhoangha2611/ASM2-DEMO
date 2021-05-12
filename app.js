@@ -22,7 +22,7 @@ app.post('/update', async (req, res) => {
     let client = await MongoClient.connect(url);
     let dbo = client.db("Test123");
     await dbo.collection("product").updateOne(condition, newValues);
-    res.redirect('/'); 
+    res.redirect('/');
 
 })
 
@@ -34,7 +34,7 @@ app.get('/edit', async (req, res) => {
     let dbo = client.db("Test123");
     let productToEdit = await dbo.collection("product").findOne(condition);
     res.render('edit', { product: productToEdit })
-    
+
 
 })
 
@@ -50,16 +50,19 @@ app.get('/delete', async (req, res) => {
     res.redirect('/')
 })
 
-app.post('/search', async (req, res) => { 
+app.post('/search', async (req, res) => {
     let client = await MongoClient.connect(url);
     let dbo = client.db("Test123");
     let nameInput = req.body.txtName;
     let searchCondition = new RegExp(nameInput, 'i')
-    let results = await dbo.collection("product").find({ name: searchCondition }).toArray(); 
+    let results = await dbo.collection("product").find({ name: searchCondition }).toArray();
     res.render('index', { model: results })
 })
 
-app.get('/', async (req, res) => { 
+
+
+
+app.get('/', async (req, res) => {
     let client = await MongoClient.connect(url);
     let dbo = client.db("Test123");
     let results = await dbo.collection("product").find({}).toArray();
@@ -72,7 +75,11 @@ app.get('/insert', (req, res) => {
 })
 
 app.post('/doInsert', async (req, res) => {
+
     var nameInput = req.body.txtName;
+    if(nameInput.length <= 3){
+        res.render('newProduct', {error: 'Bạn cần nhập tối thiểu 3 ký '})
+    }
     var priceInput = req.body.txtPrice;
     var newProduct = { name: nameInput, price: priceInput };
     let client = await MongoClient.connect(url);
@@ -80,8 +87,8 @@ app.post('/doInsert', async (req, res) => {
     await dbo.collection("product").insertOne(newProduct);
     res.redirect('/')
 })
-const PORT = process.env.PORT||3000 
-app.listen(PORT); 
+const PORT = process.env.PORT || 3000
+app.listen(PORT);
 console.log('server is running at 3000')
 
 
