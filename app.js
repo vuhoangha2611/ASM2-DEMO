@@ -22,7 +22,7 @@ app.post('/update', async (req, res) => {
     let client = await MongoClient.connect(url);
     let dbo = client.db("Test123");
     await dbo.collection("product").updateOne(condition, newValues);
-    res.redirect('/');
+    res.redirect('/'); 
 
 })
 
@@ -73,8 +73,8 @@ app.get('/insert', (req, res) => {
 
 app.post('/doInsert', async (req, res) => {
     var nameInput = req.body.txtName;
-    if (nameInput.length < 6) {  
-        return res.status(500).send({ message: "ban nhap loi" })
+    if(nameInput.length <= 6 || nameInput.includes('ID')){
+        res.render('newProduct', {error:'Bạn cần nhập có "ID" trong tên sản phẩm'})
     }
     var priceInput = req.body.txtPrice;
     var newProduct = { name: nameInput, price: priceInput };
